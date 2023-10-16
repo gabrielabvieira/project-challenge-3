@@ -3,6 +3,7 @@ package br.gabriela.brito.msemployees.application;
 import br.gabriela.brito.msemployees.application.representation.EmployeesSaveRequest;
 import br.gabriela.brito.msemployees.domain.Employees;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,11 +13,13 @@ import java.net.URI;
 @RestController
 @RequestMapping("api/v1/employees")
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeesController {
 
     private final EmployeesService service;
     @GetMapping
     public String status(){
+        log.info("Obtendo o status do microservice de funcionários");
         return "ok";
     }
 
