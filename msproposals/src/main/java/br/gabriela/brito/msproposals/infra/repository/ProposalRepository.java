@@ -1,2 +1,4 @@
-package br.gabriela.brito.msproposals.infra.repository;public interface ProposalRepository {
+package br.gabriela.brito.msproposals.infra.repository;
+
+public interface ProposalRepository {
 }
