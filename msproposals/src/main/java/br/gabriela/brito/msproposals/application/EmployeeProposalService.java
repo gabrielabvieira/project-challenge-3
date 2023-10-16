@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeProposalService {
 
-    private EmployeeProposalRepository repository;
+    private final EmployeeProposalRepository repository;
 
     public List<EmployeeProposal> listProposalsByCpf(String cpf){
         return repository.findByCpf(cpf);
