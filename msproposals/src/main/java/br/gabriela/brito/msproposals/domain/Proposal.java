@@ -6,12 +6,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class proposal {
+public class Proposal {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -20,7 +19,7 @@ public class proposal {
     private String descrição;
     private String cpf;
 
-    public proposal(String nome,
+    public Proposal(String nome,
                     String descrição,
                     String cpf) {
         this.nome = nome;
