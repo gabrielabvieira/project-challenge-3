@@ -16,8 +16,9 @@ public class ProposalService {
     private final ProposalRepository repository;
 
     @Transactional
-    public Proposal save(Proposal proposal) {
-        return repository.save(proposal);
+    public Long save(Proposal proposal) {
+        Proposal savedProposal = repository.save(proposal);
+        return savedProposal.getId();
     }
 
     public Optional<Proposal> getDataByProposal(Long id){

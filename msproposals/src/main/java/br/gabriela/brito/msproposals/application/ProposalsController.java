@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,19 +28,20 @@ public class ProposalsController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createProposal(@RequestBody ProposalSaveRequest request){
+    public ResponseEntity<Map<String, Long>> createProposal(@RequestBody ProposalSaveRequest request){
         Proposal proposal = request.toModel();
-        proposalService.save(proposal);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Long proposalId = proposalService.save(proposal);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("id_proposta", proposalId));
     }
 
     @GetMapping(params = "id")
-    public ResponseEntity<Proposal> getDataByProposal(@RequestParam("id")Long id) {
+    public ResponseEntity<Proposal> getDataByProposal(@RequestParam("id") Long id) {
         Optional<Proposal> proposal = proposalService.getDataByProposal(id);
 
         return proposal.map(ResponseEntity::ok)
-                        .orElse(ResponseEntity.notFound().build());
-        }
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 
     @GetMapping(params = "cpf")
