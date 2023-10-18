@@ -2,8 +2,8 @@ package br.gabriela.brito.msproposals.application;
 
 import br.gabriela.brito.msproposals.application.representation.ProposalSaveRequest;
 import br.gabriela.brito.msproposals.application.representation.ProposalsByEmployeeResponse;
-import br.gabriela.brito.msproposals.domain.EmployeeProposal;
 import br.gabriela.brito.msproposals.domain.Proposal;
+import br.gabriela.brito.msproposals.application.ex.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping ("api/v1/proposals")
+@RequestMapping("api/v1/proposals")
 @RequiredArgsConstructor
 public class ProposalsController {
 
@@ -23,16 +23,23 @@ public class ProposalsController {
     private final EmployeeProposalService employeeProposalService;
 
     @GetMapping
-    public String status(){
+    public String status() {
         return "ok";
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Long>> createProposal(@RequestBody ProposalSaveRequest request){
-        Proposal proposal = request.toModel();
-        Long proposalId = proposalService.save(proposal);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("id_proposta", proposalId));
+    public ResponseEntity<Map<String, String>> createProposal(@RequestBody ProposalSaveRequest request) {
+        try {
+            Long proposalId = proposalService.save(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("id_proposta", proposalId.toString()));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "CPF de funcionário não encontrado."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erro ao processar a proposta."));
+        }
     }
 
     @GetMapping(params = "id")
@@ -43,16 +50,20 @@ public class ProposalsController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
     @GetMapping(params = "cpf")
     public ResponseEntity<List<ProposalsByEmployeeResponse>> getProposalsByEmployee(
-            @RequestParam("cpf") String cpf){
-        List<EmployeeProposal> lista = employeeProposalService.listProposalsByCpf(cpf);
-        List<ProposalsByEmployeeResponse> resultList = lista.stream()
-                .map(ProposalsByEmployeeResponse::fromModel)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(resultList);
-
+            @RequestParam("cpf") String cpf) {
+        try {
+            List<ProposalsByEmployeeResponse> resultList = employeeProposalService.listProposalsByCpf(cpf).stream()
+                    .map(ProposalsByEmployeeResponse::fromModel)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(resultList);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(List.of());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(List.of());
+        }
     }
-
 }
