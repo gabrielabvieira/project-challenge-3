@@ -4,8 +4,9 @@ import lombok.Data;
 
 @Data
 public class VotingSessionSaveRequest {
-    private String proposalId;
-    private int sessionTime;
-    private String employeeCpf;
+    private String idProposta;
+    private Long tempoSessao;
+    private String cpfFuncionario;
 }
+
 
