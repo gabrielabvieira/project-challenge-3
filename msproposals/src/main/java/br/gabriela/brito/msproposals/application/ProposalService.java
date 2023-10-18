@@ -8,19 +8,29 @@ import br.gabriela.brito.msproposals.domain.Proposal;
 import br.gabriela.brito.msproposals.infra.clients.EmployeesControllerClient;
 import br.gabriela.brito.msproposals.infra.repository.ProposalRepository;
 import feign.FeignException;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@Slf4j
 public class ProposalService {
 
     private final ProposalRepository repository;
     private final EmployeesControllerClient employeesClient;
+
+    public ProposalService(ProposalRepository repository, EmployeesControllerClient employeesClient) {
+        this.repository = repository;
+        this.employeesClient = employeesClient;
+    }
 
     @Transactional
     public Long save(ProposalSaveRequest proposalSaveRequest) {
@@ -47,5 +57,26 @@ public class ProposalService {
 
     public Optional<Proposal> getDataByProposal(Long id) {
         return repository.findById(id);
+    }
+
+    @GetMapping(params = "cpf")
+    public ResponseEntity<List<Proposal>> getProposalsByEmployee(@RequestParam("cpf") String cpf) {
+        try {
+            List<Proposal> proposals = repository.findByCpf(cpf);
+
+            if (proposals.isEmpty()) {
+                log.info("Proposals not found for CPF: {}", cpf);
+                return ResponseEntity.notFound().build();
+            }
+
+            log.info("Proposals found for CPF: {}", cpf);
+            return ResponseEntity.ok(proposals);
+        } catch (FeignException.NotFound e) {
+            log.error("Feign exception: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (FeignException e) {
+            log.error("Feign exception: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
