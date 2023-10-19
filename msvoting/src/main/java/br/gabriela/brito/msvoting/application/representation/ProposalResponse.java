@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProposalRequest {
+public class ProposalResponse {
     private Long id;
     private String nome;
     private String descricao;

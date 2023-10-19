@@ -21,7 +21,7 @@ public class VotingSessionController {
     public String status(){
         return "ok";
     }
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Map<String, String>> createVotingSession(@RequestBody VotingSessionSaveRequest request){
         VotingSession votingSession = votingSessionService.createVotingSession(request);
 

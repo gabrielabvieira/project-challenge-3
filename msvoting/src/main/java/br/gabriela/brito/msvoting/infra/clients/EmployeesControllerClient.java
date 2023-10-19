@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(value = "msemployees", path = "/api/v1/employees")
 public interface EmployeesControllerClient {
-    @GetMapping(params = "/validate")
+    @GetMapping
     ResponseEntity <String> validateEmployee(@RequestParam("cpf") String cpf);
 
 }
