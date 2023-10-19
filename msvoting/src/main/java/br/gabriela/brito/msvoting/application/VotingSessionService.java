@@ -1,5 +1,6 @@
 package br.gabriela.brito.msvoting.application;
 
+import br.gabriela.brito.msvoting.application.representation.VotingSessionResponse;
 import br.gabriela.brito.msvoting.application.representation.VotingSessionSaveRequest;
 import br.gabriela.brito.msvoting.domain.model.VotingSession;
 import br.gabriela.brito.msvoting.infra.clients.EmployeesControllerClient;
@@ -18,7 +19,7 @@ public class VotingSessionService {
     private final ProposalsControllerClient proposalsClient;
     private final VotingSessionRepository votingRepository;
 
-    public VotingSession createVotingSession(VotingSessionSaveRequest request) {
+    public VotingSessionResponse createVotingSession(VotingSessionSaveRequest request) {
         employeesClient.validateEmployee(request.getCpfFuncionario());
 
         LocalDateTime sessionEnd = LocalDateTime.now().plusMinutes(getSessionDuration(request.getTempoSessao()));
@@ -29,9 +30,9 @@ public class VotingSessionService {
                 .sessionEnd(sessionEnd)
                 .build();
 
-        votingSession = votingRepository.save(votingSession);
+        VotingSession savedSession = votingRepository.save(votingSession);
 
-        return votingSession;
+        return savedSession.toResponse();
     }
 
     private long getSessionDuration(Long specifiedDuration) {

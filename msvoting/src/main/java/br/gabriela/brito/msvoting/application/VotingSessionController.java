@@ -22,11 +22,10 @@ public class VotingSessionController {
         return "ok";
     }
     @PostMapping
-    public ResponseEntity<Map<String, String>> createVotingSession(@RequestBody VotingSessionSaveRequest request){
-        VotingSession votingSession = votingSessionService.createVotingSession(request);
+    public ResponseEntity<VotingSessionResponse> createVotingSession(@RequestBody VotingSessionSaveRequest request) {
+        VotingSessionResponse votingSessionResponse = votingSessionService.createVotingSession(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("id_sessao", votingSession.getId().toString()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(votingSessionResponse);
     }
 
     @GetMapping(params = "id")
