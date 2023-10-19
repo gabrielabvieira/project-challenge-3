@@ -1,26 +1,32 @@
 package br.gabriela.brito.msvoting.application;
 
+import br.gabriela.brito.msvoting.application.representation.ProposalResponse;
 import br.gabriela.brito.msvoting.application.representation.VotingSessionResponse;
 import br.gabriela.brito.msvoting.application.representation.VotingSessionSaveRequest;
-import br.gabriela.brito.msvoting.domain.model.VotingSession;
-import lombok.RequiredArgsConstructor;
+import br.gabriela.brito.msvoting.infra.clients.ProposalsControllerClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("api/v1/voting-session")
-@RequiredArgsConstructor
+
+
 public class VotingSessionController {
 
     private final VotingSessionService votingSessionService;
+    private final ProposalsControllerClient proposalsClient;
+
+    public VotingSessionController(VotingSessionService votingSessionService, ProposalsControllerClient proposalsClient) {
+        this.votingSessionService = votingSessionService;
+        this.proposalsClient = proposalsClient;
+    }
 
     @GetMapping
-    public String status(){
+    public String status() {
         return "ok";
     }
+
     @PostMapping
     public ResponseEntity<VotingSessionResponse> createVotingSession(@RequestBody VotingSessionSaveRequest request) {
         VotingSessionResponse votingSessionResponse = votingSessionService.createVotingSession(request);
@@ -30,8 +36,16 @@ public class VotingSessionController {
 
     @GetMapping(params = "id")
     public ResponseEntity<VotingSessionResponse> getDataBySession(@RequestParam("id") Long id) {
-        VotingSessionResponse response = new VotingSessionResponse();
+        VotingSessionResponse response = votingSessionService.getVotingSession(id);
+
+        ResponseEntity<ProposalResponse> proposalResponseEntity = proposalsClient.getDataByProposal(response.getIdProposta());
+        ProposalResponse proposalResponse = proposalResponseEntity.getBody();
+
+        response.setNomeProposta(proposalResponse.getNome());
+        response.setDescricao(proposalResponse.getDescricao());
+
         return ResponseEntity.ok(response);
     }
 }
+
 

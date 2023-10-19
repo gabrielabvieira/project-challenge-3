@@ -1,5 +1,6 @@
 package br.gabriela.brito.msvoting.application.representation;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +12,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VotingSessionResponse {
     private Long id;
-    private Long proposalId;
-    private String employeeCpf;
-    private LocalDateTime sessionEnd;
+    private Long idProposta;
+    private String cpfFuncionario;
+    private LocalDateTime tempoSessao;
+    private String nomeProposta;
+    private String descricao;
 }

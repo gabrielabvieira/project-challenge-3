@@ -29,9 +29,9 @@ public class VotingSession {
     public VotingSessionResponse toResponse(){
         return VotingSessionResponse.builder()
                 .id(id)
-                .proposalId(proposalId)
-                .employeeCpf(employeeCpf)
-                .sessionEnd(sessionEnd)
+                .idProposta(proposalId)
+                .cpfFuncionario(employeeCpf)
+                .tempoSessao(sessionEnd)
                 .build();
     }
 }

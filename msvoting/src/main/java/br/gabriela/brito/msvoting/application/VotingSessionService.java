@@ -1,12 +1,15 @@
 package br.gabriela.brito.msvoting.application;
 
+import br.gabriela.brito.msvoting.application.representation.ProposalResponse;
 import br.gabriela.brito.msvoting.application.representation.VotingSessionResponse;
 import br.gabriela.brito.msvoting.application.representation.VotingSessionSaveRequest;
 import br.gabriela.brito.msvoting.domain.model.VotingSession;
 import br.gabriela.brito.msvoting.infra.clients.EmployeesControllerClient;
 import br.gabriela.brito.msvoting.infra.clients.ProposalsControllerClient;
 import br.gabriela.brito.msvoting.infra.clients.infra.repository.VotingSessionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,8 +38,25 @@ public class VotingSessionService {
         return savedSession.toResponse();
     }
 
+    public VotingSessionResponse getVotingSession(Long sessionId) {
+        VotingSession votingSession = votingRepository.findById(sessionId)
+                .orElseThrow(() -> new EntityNotFoundException("Voting session not found"));
+
+        // Obtendo dados da proposta
+        ResponseEntity<ProposalResponse> proposalResponseEntity = proposalsClient.getDataByProposal(votingSession.getProposalId());
+        ProposalResponse proposalResponse = proposalResponseEntity.getBody();
+
+        return VotingSessionResponse.builder()
+                .id(votingSession.getId())
+                .idProposta(votingSession.getProposalId())
+                .cpfFuncionario(votingSession.getEmployeeCpf())
+                .tempoSessao(votingSession.getSessionEnd())
+                .nomeProposta(proposalResponse.getNome())
+                .descricao(proposalResponse.getDescricao())
+                .build();
+    }
+
     private long getSessionDuration(Long specifiedDuration) {
         return specifiedDuration != null ? specifiedDuration : 1L;
     }
 }
-

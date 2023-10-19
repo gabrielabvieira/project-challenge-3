@@ -1,6 +1,7 @@
 package br.gabriela.brito.msvoting.infra.clients;
 
 import br.gabriela.brito.msvoting.application.representation.ProposalResponse;
+import br.gabriela.brito.msvoting.application.representation.VotingSessionResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
