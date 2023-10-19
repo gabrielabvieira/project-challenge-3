@@ -4,6 +4,7 @@ import br.gabriela.brito.msvoting.application.representation.VotingSessionSaveRe
 import br.gabriela.brito.msvoting.domain.model.VotingSession;
 import br.gabriela.brito.msvoting.infra.clients.EmployeesControllerClient;
 import br.gabriela.brito.msvoting.infra.clients.ProposalsControllerClient;
+import br.gabriela.brito.msvoting.infra.clients.infra.repository.VotingSessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class VotingSessionService {
 
     private final EmployeesControllerClient employeesClient;
     private final ProposalsControllerClient proposalsClient;
+    private final VotingSessionRepository votingRepository;
 
     public VotingSession createVotingSession(VotingSessionSaveRequest request) {
         employeesClient.validateEmployee(request.getCpfFuncionario());
@@ -26,6 +28,8 @@ public class VotingSessionService {
                 .employeeCpf(request.getCpfFuncionario())
                 .sessionEnd(sessionEnd)
                 .build();
+
+        votingSession = votingRepository.save(votingSession);
 
         return votingSession;
     }
