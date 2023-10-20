@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: msproposals
+
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  datasource:
+    url: jdbc:h2:file:../db/msproposals;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+
+server:
+  port: 0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8762/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
