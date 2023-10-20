@@ -12,11 +12,14 @@ public class Employees {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
+    @Column(nullable = false, unique = true)
     private String cpf;
-    @Column
+
+    @Column(nullable = false)
     private String nome;
-    @Column
+
+    @Column(nullable = false)
     private Integer idade;
 
     public Employees(String cpf, String nome, Integer idade) {
