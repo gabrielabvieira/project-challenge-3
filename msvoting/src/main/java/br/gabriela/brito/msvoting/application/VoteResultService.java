@@ -1,6 +1,7 @@
 package br.gabriela.brito.msvoting.application;
 
 import br.gabriela.brito.msvoting.application.representation.VoteResultResponse;
+import br.gabriela.brito.msvoting.domain.model.Vote;
 import br.gabriela.brito.msvoting.domain.model.VoteResult;
 import br.gabriela.brito.msvoting.infra.clients.infra.repository.VoteRepository;
 import br.gabriela.brito.msvoting.infra.clients.infra.repository.VoteResultRepository;
@@ -14,17 +15,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VoteResultService {
     private final VoteResultRepository voteResultRepository;
+    private final VoteRepository voteRepository;
 
     public VoteResultResponse getVoteResult(Long sessionId) {
-        List<VoteResult> voteResults = voteResultRepository.findBySessionId(sessionId);
+        List<Vote> votes = voteRepository.findBySessionId(sessionId);
 
         int approvedCount = 0;
         int rejectedCount = 0;
 
-        for (VoteResult voteResult : voteResults) {
-            if ("Aprovar".equalsIgnoreCase(voteResult.getLastVote())) {
+        for (Vote vote : votes) {
+            if ("Aprovar".equalsIgnoreCase(vote.getVoto())) {
                 approvedCount++;
-            } else if ("Rejeitar".equalsIgnoreCase(voteResult.getLastVote())) {
+            } else if ("Rejeitar".equalsIgnoreCase(vote.getVoto())) {
                 rejectedCount++;
             }
         }
@@ -38,3 +40,8 @@ public class VoteResultService {
         }
     }
 }
+
+
+
+
+

@@ -16,7 +16,7 @@ public class VoteResultController {
 
 
     @GetMapping
-    public VoteResultResponse getVoteResult(@PathVariable Long sessionId) {
-        return voteResultService.getVoteResult(sessionId);
+    public VoteResultResponse getVoteResult(@RequestParam Long idSessao) {
+        return voteResultService.getVoteResult(idSessao);
     }
 }
