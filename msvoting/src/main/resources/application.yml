@@ -2,6 +2,19 @@ spring:
   application:
     name: msvoting
 
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  datasource:
+    url: jdbc:h2:file:../db/msvoting;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+
 server:
   port: 0
 
