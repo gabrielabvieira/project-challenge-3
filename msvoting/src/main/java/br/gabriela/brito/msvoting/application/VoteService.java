@@ -9,6 +9,7 @@ import br.gabriela.brito.msvoting.infra.clients.EmployeesControllerClient;
 import br.gabriela.brito.msvoting.infra.clients.infra.repository.VoteRepository;
 import br.gabriela.brito.msvoting.infra.clients.infra.repository.VotingSessionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,21 +24,26 @@ public class VoteService {
 
     public VoteResponse vote(VoteRequest voteRequest) {
 
-        VotingSessionResponse sessionResponse = votingSessionService.getVotingSession(voteRequest.getSessionId());
+        ResponseEntity<String> responseEntity = employeesClient.validateEmployee(voteRequest.getCpfFuncionario());
+
+        if (responseEntity.getStatusCode().is2xxSuccessful()){
+        }
+
+        VotingSessionResponse sessionResponse = votingSessionService.getVotingSession(voteRequest.getIdSessao());
 
         LocalDateTime now = LocalDateTime.now();
         if (now.isAfter(sessionResponse.getTempoSessao())) {
             throw new VotingException("Sessão inválida ou tempo esgotado.");
         }
 
-        if (voteRepository.existsBySessionIdAndCpfFuncionario(voteRequest.getSessionId(), voteRequest.getCpfFuncionario())) {
+        if (voteRepository.existsBySessionIdAndCpfFuncionario(voteRequest.getIdSessao(), voteRequest.getCpfFuncionario())) {
             throw new VotingException("Funcionário já votou nesta sessão.");
         }
 
         validateVote(voteRequest.getVoto());
 
         Vote vote = new Vote();
-        vote.setSessionId(voteRequest.getSessionId());
+        vote.setSessionId(voteRequest.getIdSessao());
         vote.setCpfFuncionario(voteRequest.getCpfFuncionario());
         vote.setVoto(voteRequest.getVoto());
 
@@ -53,6 +59,6 @@ public class VoteService {
     }
 
     private VoteResponse buildVoteResponse(Long voteId) {
-        return new VoteResponse(voteId);
+        return new VoteResponse(voteId, "Voto registrado");
     }
 }

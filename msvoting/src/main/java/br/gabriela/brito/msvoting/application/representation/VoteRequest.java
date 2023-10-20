@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class VoteRequest {
 
-    private Long sessionId;
+    private Long idSessao;
     private String voto;
     private String cpfFuncionario;
 }

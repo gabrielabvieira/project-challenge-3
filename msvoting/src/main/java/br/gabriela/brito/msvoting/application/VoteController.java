@@ -24,7 +24,8 @@ public class VoteController {
     public ResponseEntity<Object> vote(@RequestBody VoteRequest voteRequest) {
         try {
             VoteResponse voteResponse = voteService.vote(voteRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id_voto", voteResponse.getIdVoto().toString()));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("id_voto", voteResponse.getIdVoto(), "status", voteResponse.getStatus()));
         } catch (VotingException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

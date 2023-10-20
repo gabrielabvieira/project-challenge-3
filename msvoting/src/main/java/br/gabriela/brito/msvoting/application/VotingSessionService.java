@@ -42,7 +42,6 @@ public class VotingSessionService {
         VotingSession votingSession = votingRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Voting session not found"));
 
-        // Obtendo dados da proposta
         ResponseEntity<ProposalResponse> proposalResponseEntity = proposalsClient.getDataByProposal(votingSession.getProposalId());
         ProposalResponse proposalResponse = proposalResponseEntity.getBody();
 
