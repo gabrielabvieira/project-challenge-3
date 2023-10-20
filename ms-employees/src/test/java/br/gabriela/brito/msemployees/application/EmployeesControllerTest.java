@@ -58,7 +58,7 @@ class EmployeesControllerTest {
         when(employeesService.getByCPF(anyString())).thenReturn(Optional.of(mockEmployees));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(employeesController).build();
-        
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/employees")
                         .param("cpf", "12345678900")
                         .contentType(MediaType.APPLICATION_JSON))
