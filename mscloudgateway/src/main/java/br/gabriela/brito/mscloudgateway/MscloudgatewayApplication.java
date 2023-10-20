@@ -22,6 +22,7 @@ public class MscloudgatewayApplication {
 				    .route(r -> r.path("/api/v1/proposals/**").uri("lb://msproposals"))
 				    .route(r -> r.path("/api/v1/voting-session/**").uri("lb://msvoting"))
 					.route(r -> r.path("/api/v1/votes/**").uri("lb://msvoting"))
+					.route(r -> r.path("/api/v1/vote-results/**").uri("lb://msvoting"))
 				.build();
 
 	}
