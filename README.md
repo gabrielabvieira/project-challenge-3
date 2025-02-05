@@ -14,7 +14,7 @@ O desafio foi desenvolvido com as seguintes premissas:
 
 - Projeto: Maven 
 - Linguagem: JAVA 17
-    - Fremework: Sring Boot 3.0.11
+    - Framework: Sring Boot 3.0.11
     - Packaging: Jar
  - Base de Dados: H2 Persistence
  - Uso de API Gateway
